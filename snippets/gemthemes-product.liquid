@@ -1,0 +1,863 @@
+
+  
+<section class="gt_section-4298086 " data-name="Product Details" keyword="product">
+  
+  {%- assign current_variant = product.selected_or_first_available_variant -%}
+  <script type="application/json" class="ProductJson" data-id="{{product.id}}" data-variant="{{product.selected_or_first_available_variant.id}}">
+      {{ product | json }}
+  </script>
+  {% unless current_variant == empty %}
+    <script type="application/json"> 
+        {{ current_variant | json }}
+    </script>
+  {% endunless %}
+  
+  {% assign currentPrice = current_variant.price | plus: 0 %}
+  {% assign comparePrice = current_variant.compare_at_price | plus: 0 %}
+  {% assign featured_image = current_variant.featured_image | default: product.featured_image %}
+
+  <div class="position_hook">
+    
+  </div>
+  <div class="gt_product">
+    <div class="gt_container">
+      <div class="gt_flex gt_flex-sm-column">
+        <div class="gt_product-image">
+          <div class="position_hook">
+            
+          </div>
+          <div class="gt_product-img">
+              <img class="gt_product-image--feature gt_lazyload" src="{{ featured_image.src | img_url: '100x' }}" data-id="{{featured_image.id}}" alt="{{ featured_image.alt | escape }}">
+          </div>
+          {% if product.images.size > 0%}
+            <div class="owl-carousel gt_product-carousel">
+              {%- for image in product.images -%}
+                <div class="item gt_product-carousel--item">
+                    {% assign classThumbnailImage = "" %}
+                    {% if featured_image.id == image.id %}
+                      {% assign classThumbnailImage = "gt_active" %}
+                    {% endif %}
+                    
+                    <img class="{{classThumbnailImage}} gt_lazyload" src="{{ image.src | img_url: '100x' }}" data-id="{{image.id}}" alt="{{ image.alt | escape }}" data-original="{{ image.src | img_url: 'master' }}">            
+                </div>
+              {%- endfor -%}
+            </div>
+          {% endif %}
+          <div class="position_hook">
+            
+          </div>
+        </div>
+        <div class="gt_product-content">
+          <div class="gt_product-title">
+            <div class="position_hook">
+              
+            </div>
+            <a>
+              <h1 class="gt_product-title--h2" itemprop="name">
+                {{ product.title }}
+              </h1>
+            </a>
+
+            
+            
+            
+            
+              
+            
+            
+              <div class="position_hook">
+                
+              </div>
+              
+          </div>
+
+          <div class="gt_product-body">
+            <div class="position_hook">
+              
+            <div class="gt_flex gt_product-price">
+              <div>
+                <span class="gt_product-price--number" itemprop="price" data-currentprice="{{ product.selected_or_first_available_variant.price }}">
+                  {{ product.selected_or_first_available_variant.price | money }}
+                </span>  
+                
+                  {% if product.selected_or_first_available_variant.compare_at_price > 0 and product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %}                   
+                  <span class="gt_product-price--compare" data-currentprice="{{ product.selected_or_first_available_variant.compare_at_price }}">
+                    {{ product.selected_or_first_available_variant.compare_at_price | money }}
+                  </span>
+                  {% endif %}
+                
+              </div>
+
+              {% if comparePrice > 0 and comparePrice > currentPrice %}
+                {% assign classProductSaved = 'gt_active' %}
+              {% else %}
+                {% assign classProductSaved = '' %}
+              {% endif %}
+              
+                <div class="gt_product-saved {{classProductSaved}}">
+                  <span>
+                    Saved
+                  </span>
+                  <span class="gt_product-saved--number">
+                    {%- if comparePrice > 0 and comparePrice > currentPrice -%}
+                      {%- assign saved = comparePrice | minus: currentPrice -%}
+                      {%- assign comparePriceFloat = comparePrice | times: 1.0 -%}
+                      {%- assign diff = saved | divided_by: comparePriceFloat -%}
+                      {%- assign diff = diff | times: 100.0 -%}
+                      {%- assign diff = diff | round -%}
+                      {{ diff }}%
+                    {%- endif -%}
+                  </span>
+                  <span class="gt_product-saved--price">
+                    {%- if comparePrice > 0 and comparePrice > currentPrice -%}
+                      {%- if saved > 0 -%}
+                        ({{ saved | money }})
+                      {%- endif -%}
+                    {%- endif -%}
+                  </span>
+                </div>
+              
+            </div>
+            <div class="position_hook">
+              
+            </div>
+          
+            {% form 'product', product, class:'product-form' %}
+              <input type="hidden" name="id" class="gt_swatches--input" value="{{current_variant.id}}">
+              <div class="gt_product-swatches">
+                {% for option in product.options_with_values %}
+                  {% if option.name != "Title" or option.values.size != 1 or option.values[0] != "Default Title"  %}
+                    <div class="gt_product-swatches--item {% if option.values.size == 1%} variant_none {% endif %}" data-name="{{option.name}}">
+                      <span class="gt_product-swatches--name">{{option.name}}</span>
+                      <div class="gt_flex gt_flex-wrap gt_product-swatches--options">
+                        {% for value in option.values %}
+                          {% if value == option.selected_value %}
+                            {% assign selectedClass = 'gt_swatches--select gt_active' %}
+                          {% else %}
+                            {% assign selectedClass = 'gt_swatches--select' %}
+                          {% endif %}
+                            <div class="{{selectedClass}}" data-name="{{option.name | replace: '"', "'"}}" data-value="{{value | replace: '"', "'"}}"><span>{{ value }}</span></div>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  {% endif %}
+                {% endfor %}
+
+                {% if option.values.size > 1 %}
+                  <div class="position_hook">
+                    
+                  </div>
+                {% endif %}
+              </div>
+
+              {% if current_variant.available %}
+              {% assign classQuantity = '' %}
+              {% else %}
+                {% assign classQuantity = 'gt_soldout' %}
+              {% endif %}
+              <div class="gt_product-quantity {{classQuantity}}">
+                <span>
+                  Quantity
+                </span>
+                <div class="gt_inline-flex gt_product-quantity--wrapper">
+                  <div class="gt_flex gt_justify-c-center gt_align-i-center gt_product-quantity--minus">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M2 8C2 7.44772 2.44772 7 3 7L13 7C13.5523 7 14 7.44772 14 8C14 8.55228 13.5523 9 13 9L3 9C2.44772 9 2 8.55228 2 8Z" fill="#6D6D6D"/>
+                    </svg>                          
+                  </div>
+                  <input type="number" class="input gt_product-quantity--number" value="1" min="1" name="quantity">
+                  <div class="gt_flex gt_justify-c-center gt_align-i-center gt_product-quantity--plus">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M8 2C8.55228 2 9 2.44772 9 3V13C9 13.5523 8.55228 14 8 14C7.44772 14 7 13.5523 7 13V3C7 2.44772 7.44772 2 8 2Z" fill="#6D6D6D"/>
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M2 8C2 7.44772 2.44772 7 3 7L13 7C13.5523 7 14 7.44772 14 8C14 8.55228 13.5523 9 13 9L3 9C2.44772 9 2 8.55228 2 8Z" fill="#6D6D6D"/>
+                    </svg>                          
+                  </div>
+                </div>
+              </div>
+
+              {% if current_variant.available %}
+                {% assign classButton = '' %}
+              {% else %}
+                {% assign classButton = 'gt_soldout' %}
+              {% endif %}
+              <div class="ro_widget"></div>
+              
+              
+                <div class="gt_product-addtocart {{classButton}}" data-addtocart="BUY IT NOW!" data-soldout="SOLD OUT">
+                <div class="position_hook">
+                  
+                </div>
+
+                <button type="submit" name="add" id="AddToCart" class="btn button gt_flex gt_align-i-center gt_justify-c-center gt_product-addtocart--button">
+                  <span class="gt_product-addtocart--text">
+                    {%- if current_variant.available -%}
+                      BUY IT NOW!
+                    {%- else -%}
+                      SOLD OUT
+                    {%- endif -%}
+                  </span>
+                </button>
+
+                <div class="position_hook">
+                  
+                </div>
+                </div>
+              
+            {% endform %}
+
+            <div class="gt_product-trust-badge">
+              <img class="gt_lazyload" src="https://d3dfaj4bukarbm.cloudfront.net/staging/images/admin/652162e8-7a8a-48ee-b446-e7b35f5377b5.png" alt="Trust%20Badge">
+            </div>
+
+            <div class="gt_flex gt_align-i-center gt_flex-wrap gt_icon_social">
+              <span class="gt_text_share">
+                Share:
+              </span>
+              
+                <a class="gt_social__twitter" href="https://twitter.com/share?url=https://{{shop.domain}}{{ product.url }}" target="_blank">
+                  <div class="gt_flex gt_icon_content">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M18.6396 5.31457C18.0007 5.59856 17.3132 5.79012 16.5917 5.87584C17.3283 5.43487 17.8931 4.73637 18.1595 3.90311C17.4705 4.31198 16.7078 4.60867 15.8954 4.76883C15.2452 4.07597 14.3184 3.64276 13.2929 3.64276C11.3241 3.64276 9.72775 5.23908 9.72775 7.20828C9.72775 7.48733 9.75915 7.75932 9.82018 8.02073C6.85685 7.87186 4.22936 6.45263 2.47077 4.2954C2.16385 4.82174 1.98817 5.43416 1.98817 6.08821C1.98817 7.32505 2.61752 8.41654 3.57426 9.05578C2.99006 9.03708 2.44008 8.87656 1.95924 8.60951C1.95889 8.62433 1.95889 8.6395 1.95889 8.65467C1.95889 10.3819 3.18796 11.8226 4.81921 12.1507C4.52005 12.2318 4.20502 12.2756 3.87976 12.2756C3.64975 12.2756 3.42644 12.2533 3.20878 12.2114C3.6628 13.6278 4.97937 14.6589 6.53935 14.6875C5.31909 15.6439 3.78204 16.214 2.11129 16.214C1.82377 16.214 1.53979 16.197 1.26074 16.1639C2.83907 17.176 4.71302 17.7658 6.72632 17.7658C13.2848 17.7658 16.8708 12.3331 16.8708 7.62138C16.8708 7.46687 16.8676 7.3127 16.8609 7.1596C17.5573 6.65795 18.1619 6.02965 18.6396 5.31457Z" fill="#6D6D6D"/>
+                    </svg>                                                  
+                  </div>
+                </a>
+              
+              
+                <a class="gt_social__facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://{{shop.domain}}{{ product.url }}" target="_blank">
+                  <div class="gt_flex gt_icon_content">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M8.362 17H10.981V9.93865H12.808L13 7.57518H10.981V6.22878C10.981 5.67343 11.086 5.45387 11.581 5.45387H13V3H11.2C9.241 3 8.362 3.92343 8.362 5.6928V7.57518H7V9.96771H8.362V17Z" fill="#6D6D6D"/>
+                    </svg>                                                   
+                  </div>
+                </a>
+              
+              
+                <a class="gt_social__pinterest" href="http://pinterest.com/pin/create/link/?url=https://{{shop.domain}}{{ product.url }}" target="_blank">
+                    <div class="gt_flex gt_icon_content">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M10.0006 1.81964C5.2032 1.81964 1.31348 5.7083 1.31348 10.5068C1.31348 14.0635 3.45237 17.1192 6.51306 18.463C6.48872 17.8558 6.50883 17.1284 6.6644 16.4684C6.83127 15.7628 7.782 11.7348 7.782 11.7348C7.782 11.7348 7.50436 11.1802 7.50436 10.3604C7.50436 9.07345 8.25049 8.11213 9.1797 8.11213C9.96992 8.11213 10.3516 8.7055 10.3516 9.41564C10.3516 10.2101 9.84469 11.3979 9.58434 12.4982C9.36703 13.42 10.0465 14.1718 10.9556 14.1718C12.6013 14.1718 13.7101 12.0579 13.7101 9.55322C13.7101 7.64928 12.4277 6.22406 10.0955 6.22406C7.46027 6.22406 5.81879 8.18903 5.81879 10.384C5.81879 11.1411 6.0421 11.6745 6.39171 12.0879C6.55222 12.2774 6.5748 12.3539 6.51659 12.5716C6.47496 12.7314 6.37936 13.1166 6.33985 13.269C6.28199 13.4895 6.10384 13.5682 5.90487 13.4867C4.69132 12.9914 4.12582 11.6621 4.12582 10.1678C4.12582 7.70044 6.20685 4.74134 10.3343 4.74134C13.6504 4.74134 15.8334 7.14164 15.8334 9.71797C15.8334 13.1251 13.9394 15.6711 11.1468 15.6711C10.2088 15.6711 9.32646 15.1638 9.02448 14.5888C9.02448 14.5888 8.52001 16.5904 8.41347 16.9764C8.22932 17.6466 7.86843 18.3159 7.53894 18.8373C8.32034 19.068 9.14548 19.1936 10.001 19.1936C14.798 19.1936 18.6874 15.3049 18.6874 10.5071C18.687 5.7083 14.7973 1.81964 10.0006 1.81964Z" fill="#6D6D6D"/>
+                        </svg>                                                   
+                    </div>
+                  </a>
+              
+              
+                <a class="gt_social__mail" href="mailto:?body=https://{{shop.domain}}{{ product.url }}" target="_blank">
+                  <div class="gt_flex gt_icon_content">
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M1.875 4.5C1.59886 4.5 1.375 4.72386 1.375 5V15C1.375 15.2761 1.59886 15.5 1.875 15.5H18.125C18.4011 15.5 18.625 15.2761 18.625 15V5C18.625 4.72386 18.4011 4.5 18.125 4.5H1.875ZM-0.125 5C-0.125 3.89544 0.770436 3 1.875 3H18.125C19.2296 3 20.125 3.89544 20.125 5V15C20.125 16.1046 19.2296 17 18.125 17H1.875C0.770436 17 -0.125 16.1046 -0.125 15V5Z" fill="#6D6D6D"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M12.5107 7.82284C12.7835 7.51108 13.2573 7.47945 13.569 7.75218L19.4941 12.9355C19.8058 13.2082 19.8375 13.6821 19.5647 13.9938C19.292 14.3056 18.8182 14.3372 18.5064 14.0645L12.5814 8.88114C12.2696 8.60842 12.238 8.1346 12.5107 7.82284Z" fill="#6D6D6D"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M7.48949 7.82284C7.76222 8.13459 7.73059 8.60841 7.41883 8.88114L1.49383 14.0645C1.18208 14.3372 0.708259 14.3056 0.435529 13.9938C0.162798 13.6821 0.194433 13.2082 0.506188 12.9355L6.43119 7.75218C6.74294 7.47945 7.21676 7.51108 7.48949 7.82284Z" fill="#6D6D6D"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M0.315744 3.75258C0.55089 3.41159 1.01795 3.32578 1.35894 3.56092L9.28644 9.02759C9.71562 9.32391 10.2837 9.32415 10.7129 9.02783L18.6407 3.56092C18.9817 3.32578 19.4488 3.41159 19.6839 3.75258C19.9191 4.09358 19.8333 4.56064 19.4923 4.79578L11.5651 10.2622C11.565 10.2623 11.5652 10.2621 11.5651 10.2622C10.6231 10.9124 9.3769 10.9126 8.43491 10.2625L0.507405 4.79578C0.166408 4.56064 0.0805981 4.09358 0.315744 3.75258Z" fill="#6D6D6D"/>
+                      </svg>                                                                                                                                                              
+                  </div>
+                </a>
+              
+            </div>
+
+            <div class="position_hook">
+              
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="position_hook">
+    
+  </div>
+  
+  <script type="application/ld+json">{%- assign schemaProduct = product -%}
+{%- assign schemaVariant = product.selected_or_first_available_variant -%}
+{%- assign g_review_count = 0 -%}
+{%- assign g_rating_value = 0 -%}
+{%- comment -%}
+  For Shopify Product Reviews
+{%- endcomment -%}
+{%- if schemaProduct.metafields.spr.reviews -%}
+    {%- assign product_review_array = "reviewCount,ratingValue" | split: ',' -%}
+    {%- capture review_data -%}
+        {{schemaProduct.metafields.spr.reviews}}
+    {%- endcapture -%}
+    {%- assign array_builder = "" -%}
+    {%- for review_data_item in product_review_array -%}
+        {%- capture new_var -%}
+          "{{ review_data_item }}"
+        {%- endcapture -%}
+        {%- assign review_data1 = review_data | split: new_var -%}
+        {%- assign review_data2 = review_data1[1] | split: ":" -%}
+        {%- assign review_data3 = review_data2[1] | split: '"' -%}
+        {%- assign review_data_value = review_data3[1] | plus: 1 | minus: 1 -%}
+        {%- assign array_builder = array_builder | append: review_data_value | append: '_' -%}
+    {%- endfor -%}
+
+    {%- assign review_data_array = array_builder | split:'_' -%}
+    {%- assign g_review_count = review_data_array[0] -%}
+    {%- assign g_rating_value = review_data_array[1] -%}
+{%- endif -%}
+{%- comment -%}
+  For Judge Reviews
+{%- endcomment -%}
+{%- if schemaProduct.metafields.judgeme.badge -%}
+    {%- assign product_review_array="data-number-of-reviews,data-average-rating" | split: ',' -%}
+    {%- capture review_data -%}
+        {{schemaProduct.metafields.judgeme.badge}}
+    {%- endcapture -%}
+    {%- assign array_builder = "" -%}
+    {%- for review_data_item in product_review_array -%}
+        {%- assign review_data1 = review_data | split: review_data_item -%}
+        {%- assign review_data2 = review_data1[1] | split: "=" -%}
+        {%- assign review_data3 = review_data2[1] | split: "'" -%}
+        {%- assign review_data_value = review_data3[1] | plus: 1 | minus: 1 -%}
+        {%- assign array_builder = array_builder | append:review_data_value | append: '_' -%}
+    {%- endfor -%}
+    {%- assign review_data_array = array_builder | split: '_' -%}
+    {%- assign g_review_count = review_data_array[0] -%}
+    {%- assign g_rating_value = review_data_array[1] -%}
+{%- endif -%}
+{%- comment -%}
+  For Loox Reviews
+{%- endcomment -%}
+{%- if schemaProduct.metafields.loox.num_reviews -%}
+    {%- assign g_review_count = schemaProduct.metafields.loox.num_reviews -%}
+    {%- assign g_rating_value = schemaProduct.metafields.loox.avg_rating -%}
+{%- endif -%}
+{%- comment -%}
+  Opinew Product Reviews
+{%- endcomment -%}
+{%- if schemaProduct.metafields.opinew_metafields.reviews_count and schemaProduct.metafields.opinew_metafields.reviews_count != "0" -%}
+    {%- assign g_review_count = schemaProduct.metafields.opinew_metafields.reviews_count -%}
+    {%- assign g_rating_value = schemaProduct.metafields.opinew_metafields.reviews_average -%}
+{%- endif -%}
+{%- comment -%}
+  For Growave
+{%- endcomment -%}
+{%- if schemaProduct.metafields.ssw[ssw_rate_data_key] -%}
+    {%- assign g_review_count = schemaProduct.metafields.ssw[ssw_rate_data_key].count | plus: 0 -%}
+    {%- assign g_rating_value = schemaProduct.metafields.ssw[ssw_rate_data_key].avg | plus: 0 -%}
+    {%- assign ssw_product_id = schemaProduct.id -%}
+    {%- if schemaProduct.metafields.ssw[ssw_rate_data_key].product_id -%}
+        {%- assign ssw_product_id = schemaProduct.metafields.ssw[ssw_rate_data_key].product_id | plus: 0 -%}
+    {%- endif -%}
+    {%- if ssw_product_id != schemaProduct.id -%}
+        {%- assign g_review_count = 0 -%}
+    {%- endif -%}
+{%- endif -%}
+{
+  "@context": "http://schema.org/",
+  "@type": "Product",
+  "name":{{schemaProduct.title | json}},
+  "url":{{shop.url | append: schemaProduct.url | json}},
+{%- if schemaProduct.featured_image -%}
+  {%- assign image_size = schemaProduct.featured_image.width | append: 'x' -%}
+  "image": [
+    {{schemaProduct.featured_image.src | img_url: image_size | prepend: "https:" | json}}
+  ],
+{%- endif -%}
+
+  "description": {{schemaProduct.description | default: "" | strip_html | json}},
+
+{%- if schemaProduct.selected_or_first_available_variant.sku != blank -%}
+  "sku":{{schemaProduct.selected_or_first_available_variant.sku | json}},
+{%- endif -%}
+
+  "brand":{
+    "@type": "Thing",
+    "name":{{schemaProduct.vendor | json}}
+  },
+  "mpn": "",
+
+{% if schemaVariant.barcode.size == 12 %}
+  "gtin12": {{ schemaVariant.barcode }},
+{%- endif -%}
+
+{%- if schemaVariant.barcode.size == 13 -%}
+  "gtin13": {{ schemaVariant.barcode }},
+{%- endif -%}
+
+{%- if schemaVariant.barcode.size == 14 -%}
+  "gtin14": {{ schemaVariant.barcode }},
+{%- endif -%}
+
+{%- assign g_review_count = g_review_count | plus: 0 -%}
+{%- if g_review_count != 0 -%}
+  "aggregateRating": {"@type":"AggregateRating","ratingValue":"{{ g_rating_value }}","reviewCount":"{{ g_review_count }}", "bestRating": "5", "worstRating": "1"},
+{%- elsif schemaProduct.metafields.alireviews.seo_rating_review_key_script -%}
+  {{schemaProduct.metafields.alireviews.seo_rating_review_key_script}}
+{%- endif -%}
+
+  "offers": {
+    "@type" : "Offer",
+
+  {%- if schemaVariant.sku != blank -%}
+    "sku":{{schemaVariant.sku | json}},
+  {%- endif -%}
+    "availability" : "http://schema.org/{% if schemaVariant.available %}InStock{% else %}OutOfStock{% endif %}",
+    "price" :{{schemaVariant.price | divided_by: 100.00 | json}},
+    "priceCurrency" :{{cart.currency.iso_code | json}},
+    "priceValidUntil": "{{ 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' | uri_encode | replace:'+','%20' }}",
+    "url" :{{shop.url | append: schemaVariant.url | json}}
+  }
+}
+</script>
+
+</div></section>
+
+
+<section class="gt_section-4298080 " data-name="Tab Product">
+  
+  {%- assign current_variant = product.selected_or_first_available_variant -%}
+  <script type="application/json" class="ProductJson" data-id="{{product.id}}" data-variant="{{product.selected_or_first_available_variant.id}}">
+      {{ product | json }}
+  </script>
+  {% unless current_variant == empty %}
+  <script type="application/json"> 
+      {{ current_variant | json }}
+  </script>
+  {% endunless %}
+  {% assign currentPrice = current_variant.price | plus: 0 %}
+  {% assign comparePrice = current_variant.compare_at_price | plus: 0 %}
+  {% assign featured_image = current_variant.featured_image | default: product.featured_image %}
+<div class="gt_container"> 
+  <div class="position_hook">
+    
+  </div>
+  <div class="gt_tab-detail-product">
+    <div class="gt_tab-detail-product--head">
+      <div class="gt_slider"></div>
+      
+        <div class="item">
+            <div class="tab_span active" data-tab="1">
+                <span class="gt_tab-detail--title">Description</span>
+              </div>
+        </div>
+      
+      
+        <div class="item">
+            <div class="tab_span" data-tab="2">
+                <span class="gt_tab-detail--title">Shipping & Return</span>
+              </div>
+        </div>
+      
+      
+        <div class="item">
+            <div class="tab_span" data-tab="3">
+                <span class="gt_tab-detail--title">Our Guarantee</span>
+              </div>
+        </div>
+      
+      
+        <div class="item">
+          <div class="tab_span" data-tab="4">
+              <span class="gt_tab-detail--title">Review</span>
+              <p class="gt_review gt_hidden">0</p>
+            </div>
+        </div>
+      
+    </div>
+
+    <div class="owl-carousel gt_tabproduct-carousel gt_tab-detail-product--head-mobi">
+        
+          <div class="item">
+              <div class="active tab_span" data-tab="1">
+                  <span class="gt_tab-detail--title">Description</span>
+                </div>
+          </div>
+        
+        
+          <div class="item">
+              <div class="tab_span" data-tab="2">
+                  <span class="gt_tab-detail--title">Shipping & Return</span>
+                </div>
+          </div>
+        
+        
+          <div class="item">
+              <div class="tab_span" data-tab="3">
+                  <span class="gt_tab-detail--title">Our Guarantee</span>
+                </div>
+          </div>
+        
+        
+          <div class="item">
+            <div class="tab_span" data-tab="4">
+                <span class="gt_tab-detail--title">Review</span>
+                <p class="gt_review gt_hidden">0</p>
+              </div>
+          </div>
+        
+    </div>    
+
+    <div class="gt_tab-detail-product--body">
+      
+        <div class=" gt_tab-detail-product--none active " data-tab="1">
+          <div class="gt_box-desc gt_tab-detail-product--text">
+            {{ product.content }}
+          </div>
+          
+          <div class="gt_flex gt_justify-c-center gt_align-i-center   gt_view-more ">
+            <span class="gt_more">
+              View more
+            </span>
+            <span class="gt_less">
+              View less
+            </span>
+            <div class="gt_flex">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M8.53033 10.5303C8.23744 10.8232 7.76256 10.8232 7.46967 10.5303L4.46967 7.53033C4.17678 7.23744 4.17678 6.76256 4.46967 6.46967C4.76256 6.17678 5.23744 6.17678 5.53033 6.46967L8 8.93934L10.4697 6.46967C10.7626 6.17678 11.2374 6.17678 11.5303 6.46967C11.8232 6.76256 11.8232 7.23744 11.5303 7.53033L8.53033 10.5303Z" fill="#548CF8"/>
+              </svg>                  
+            </div>
+          </div>
+          
+          <div class="position_hook">
+              
+          </div>
+        </div>
+      
+      
+        <div class="gt_tab-detail-product--none" data-tab="2">
+          
+            <div class="gt_text_size_chart"> 
+              We offer standard shipping for all orders made in Timberland Online Store. Orders are shipped on business days only (Monday-Friday, excluding Malaysia National holidays). For in-stock items, depending on the shipping method you select, your order should be processed and ship within 3 - 7 working days after order verification and credit approval. We use flat-rate shipping of RM 12.00 for orders below RM 300. Despite the number of shipments you receive, you will never be charged more than the amount stated on your order confirmation.
+            </div>
+          
+          <div class="position_hook">
+              
+          </div>
+        </div>
+      
+      
+        <div class="gt_tab-detail-product--none" data-tab="3">
+          
+            <div class="gt_text_size_chart"> 
+              Our policy lasts 30 days. If 30 days have gone by since your purchase, unfortunately we can’t offer you a refund or exchange. To be eligible for a return, your item must be unused and in the same condition that you received it. It must also be in the original packaging. Several types of goods are exempt from being returned. Perishable goods such as food, flowers, newspapers or magazines cannot be returned. We also do not accept products that are intimate or sanitary goods, hazardous materials, or flammable liquids or gases. To complete your return, we require a receipt or proof of purchase.
+            </div>
+          
+          <div class="position_hook">
+              
+          </div>
+        </div>
+      
+      
+        <div class="gt_tab-detail-product--none" data-tab="4">
+          
+            <div class="gt_app_review">
+              <div class="lt-block-reviews"> 
+                <ryviu-widget handle="{{product.handle}}" title_product="{{product.title}}" total_meta="{{ product.metafields.ryviu.r_count }}" image_product="{{ product.featured_image.src | img_url: '800x' }}">
+                </ryviu-widget>
+              </div>
+              <div id="stamped-main-widget" data-widget-style="standard" data-product-id="{{ product.id }}" data-name="{{ product.title | escape }}" data-url="{{ shop.url }}{{ product.url }}" data-image-url="{{ product.featured_image | product_img_url: "large" |replace: '?', '%3F' | replace: '&','%26'}}" data-description="{{ product.description | escape }}" data-product-sku="{{product.handle}}" data-product-type="{{product.type}}"> 
+              {{ product.metafields.stamped.reviews }} 
+              </div>
+              <!--Yotpo reviews widget-->
+              <div class="yotpo yotpo-main-widget" data-product-id="{{ product.id }}" data-name="{{ product.title | escape }}" data-url="{{ shop.url }}{{ product.url }}" data-image-url="{{ product.featured_image | product_img_url: "large" |replace: '?', '%3F' | replace: '&','%26'}}" data-description="{{ product.description | escape }}">
+              </div>
+              <div id="shopify-ali-review" product-id="{{ product.id }}"> {{ shop.metafields.review_collector.review_code }}</div>
+              <div id="looxReviews" data-product-id="{{product.id}}">{{ product.metafields.loox.reviews }}
+              <div id="shopify-product-reviews" data-id="{{product.id}}">{{ product.metafields.spr.reviews }}</div>
+            </div>
+          
+          
+        </div>
+          
+    </div>
+  </div>
+  </div>
+  <div class="position_hook">
+      
+  </div>
+</div>
+</section>
+
+
+<section class="gt_section-4298078 " data-name="You May Also Like">
+  <div class="gt_productlist"> 
+    <div class="position_hook">
+      
+    </div>
+    <div class="gt_container">
+      <div class="gt_productlist-content">
+        <div class="gt_flex gt_flex-column gt_align-i-center gt_productlist-head">
+        <h3>
+        You May Also Like
+        </h3>
+        </div>
+        <div class="position_hook">
+            
+        </div>
+        <div class="gt_flex gt_flex-wrap owl-carousel owl-theme gt_productlist-items">
+        
+        
+        
+        {% for product in collections.all.products limit:4 %}
+        
+            <div class="gt_productlist-item item">
+            <div class="gt_element-29811" data-name="Product List" keyword="product">
+  {%- assign current_variant = product.selected_or_first_available_variant -%}
+    <script type="application/json" class="ProductJson" data-id="{{product.id}}" data-variant="{{product.selected_or_first_available_variant.id}}">
+      {{ product | json }}
+    </script>
+  {% unless current_variant == empty %}
+    <script type="application/json"> 
+      {{ current_variant | json }}
+    </script>
+  {% endunless %}
+    
+      {% form 'product', product, class:'product-form' %}
+    
+    <input type="hidden" name="id" class="gt_swatches--input" value="{{current_variant.id}}">
+    <meta itemprop="name" content="{{ product.title }}">
+    <meta itemprop="url" content="{{ shop.url }}{{ product.url }}">
+    <meta itemprop="image" content="{{ product.featured_image.src | img_url: 'grande' }}">
+
+    <div class="gt_product_content">
+      <a class="gt_product_link" href="{{product.url}}">
+      <div class="gt_image_product">
+        
+        {%- assign current_variantProduct = product.selected_or_first_available_variant -%}
+        {% if current_variantProduct == empty or current_variantProduct.featured_image == null  %}
+          {%- assign imageURL = product.featured_image -%}
+        {% else %}
+          {%- assign imageURL = current_variantProduct.featured_image -%}
+        {% endif %}
+
+
+        <div class="image_content gt_product-images">
+          
+            {%- assign imageURL = product.featured_image -%}
+          
+
+          <img class="gt_lazyload" src="{{ imageURL.src | img_url: '300x' }}" data-id="{{ imageURL.id }}" alt="{{ imageURL.alt }}">
+        </div>
+        
+        
+        {% assign endDate = "" %}
+        
+        
+        
+        {% if product.id == 6594273804443 %}
+          {% assign endDate = "" %}
+        {% endif %}
+        
+
+        {% if endDate != "" %}
+        <div class="gt_countdown" end-date="{{endDate}}" product-id="{{product.id}}">
+          <div class="count_down_content">
+            <span class="time_count_down">
+              <span class="time_count_down-hours">00</span>:<span class="time_count_down-minutes">00</span>:<span class="time_count_down-seconds">00</span>
+            </span>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      </a>
+      <a class="gt_product_link" href="{{product.url}}">
+      <div class="gt_product_name">
+          {{product.title}}
+      </div>
+      </a>
+      <div class="gt_flex gt_variant_product">
+       {% for option in product.options_with_values offset: 1 limit: 2 %}
+        {% if option.name != "Title" %}
+          <div class="gt_flex gt_flex-column gt_variant_content product_variant gt_product-swatches--item {% if option.values.size == 1%} variant_none {% endif %}" data-name="{{option.name}}">
+            <p>{{option.name}}</p>
+            <div class="gt_select-styled gt_product-swatches--name">{{option.selected_value}}</div>
+              <ul class="gt_select-options" style="display: none;">
+               
+              {% for value in option.values %}
+                {% if value == option.selected_value %}
+                    {% assign selectedClass = 'gt_swatches--select gt_active' %}
+                {% else %}
+                    {% assign selectedClass = 'gt_swatches--select' %}
+                {% endif %}
+                <li class="gt_product-swatches--options {{selectedClass}}" data-name="{{option.name}}" data-value="{{value}}" data-show="false">{{value}}</li>
+              {% endfor %}
+                  
+              </ul>
+          </div>
+        {% endif %}
+         {% endfor %}
+          {% for option in product.options_with_values limit: 1 %}
+          {% if option.name != "Title" %}
+             <div class="gt_flex gt_flex-column gt_variant_content product_variant gt_product-swatches--item {% if option.values.size == 1%} variant_none {% endif %}" data-name="{{option.name}}">
+              <p>{{option.name}}</p>
+              <div class="gt_select-styled gt_product-swatches--name">{{option.selected_value}}</div>
+              <ul class="gt_select-options" style="display: none;">
+               
+              {% for value in option.values %}
+                {% if value == option.selected_value %}
+                    {% assign selectedClass = 'gt_swatches--select gt_active' %}
+                {% else %}
+                    {% assign selectedClass = 'gt_swatches--select' %}
+                {% endif %}
+                <li class="gt_product-swatches--options {{selectedClass}}" data-name="{{option.name}}" data-value="{{value}}" data-show="false">{{value}}</li>
+              {% endfor %}
+                  
+              </ul>
+              
+          </div>
+          {% endif %}
+          {% endfor %} 
+      </div>
+      <div class="gt_flex gt_product_price">
+        
+          <span class="gt_curent_price gt_product-price--number" data-currentprice="{{ product.price }}">{{product.price | money }}</span>
+      </div>
+      {% if current_variant.available %}
+        {% assign classButton = '' %}
+      {% else %}
+        {% assign classButton = 'gt_soldout' %}
+      {% endif %}
+      
+        <div class="button_add_to_cart gt_product-addtocart {{classButton}}" data-addtocart="BUY NOW" data-soldout="Sold Out">
+          
+            <button name="add" id="AddToCart" class="gt_product-addtocart--button" type="submit">
+              
+              <span class="gt_product-addtocart--text">
+                {%- if current_variant.available -%}
+                  BUY NOW
+                {%- else -%}
+                  Sold Out
+                {%- endif -%}
+              </span>
+            </button>
+          
+      </div>
+      
+      
+    </div>
+    <div class="position_hook">
+    
+    </div>
+    
+    {% endform %}
+  
+</div>
+
+            </div>
+        {% endfor %}
+    </div>
+    </div>
+    </div>
+    <div class="position_hook">
+      
+    </div>
+  </div>
+</section>
+
+
+<section class="gt_section-4298106 " data-name="Newsletter">
+  <div class="gt_newletter">
+    <div class="gt_container">
+      <div class="gt_flex gt_align-i-center gt_justify-c-center gt_flex-wrap gt_newletter-body">
+        <div class="gt_newletter_content">
+          <h5 class="gt_newletter_headding">
+              Exclusive 10% Discount
+          </h5>
+          <p class="gt_newletter_message">
+            Join our Email List and get 10% OFF on your first order.
+          </p>
+        </div>
+        <div class="gt_newletter-form">
+          
+            {% form 'customer' %} 
+          
+         
+          {% if form.errors %}
+              {% for field in form.errors %}
+                  <div class="gt_newletter_input">
+                    <p class="result-error">{{ field }} {{ form.errors.messages[field] }}</p>
+                  </div>
+              {% endfor %}
+          {% endif %}
+            
+          {% if form.posted_successfully? %}
+              <div class="gt_newletter_input">
+                <p class="result">Thanks for subscribing</p>
+              </div>
+          {% else %}
+          <div class="gt_newletter_input">
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <input class="gt_input" type="email" value="{% if customer %}{{ customer.email }}{% endif %}" name="contact[email]" autocorrect="off" autocapitalize="off" placeholder="Your email here...">
+            <button class="gt_newletter_btn" id="Subscribe" type="submit" aria-label="Subscribe">
+            SUBMIT!
+          </button>
+          </div>
+          <p class="result"></p>
+          <p class="result-error"></p>
+          {% endif %}
+          
+            {% endform %}
+          
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+  
+<div class="gt_widget-186344" style="display: none;" data-name="Frequently Bought Together">
+  <div class="bought_together_body">
+    <div class="title_bought_together">
+      <h3>
+        FREQUENTLY BOUGHT TOGETHER
+      </h3>
+    </div>
+    <div class="bought_together_content" style="display: none;">
+      <div class="gt_flex select_items_list">
+        <div class="gt_flex list_image">
+        </div>
+        <div class="box_select_items">
+          <div class="gt_flex total_price_select">
+            <span class="title_text">
+              Total Price:
+            </span>
+            <span class="number_money"></span>
+          </div>
+          <div class="button_add_item">
+            <button class="gt_btn-add-selected-item" type="submit">
+              ADD SELECTED ITEM
+
+
+              <div class="gt_loading">
+                <svg version="1.1" id="L9" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 0 0" space="preserve">
+                  <path fill="#333" d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50">
+                    <animateTransform attributeName="transform" attributeType="XML" type="rotate" dur="0.8s" from="0 50 50" to="360 50 50" repeatCount="indefinite"/>
+                  </path>
+                </svg>
+              </div>
+            </button>
+          </div>
+          <p class="gt-error gt-error--add" style="display: none;"></p>
+        </div>
+      </div>
+      <div class="detail_items">
+      </div>
+    </div>
+  </div>
+  <p class="gt-error gt-error--empty" style="display: none;"></p>
+  <div class="gt_loading">
+    <svg version="1.1" id="L9" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 0 0" space="preserve">
+      <path fill="#333" d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50">
+        <animateTransform attributeName="transform" attributeType="XML" type="rotate" dur="0.8s" from="0 50 50" to="360 50 50" repeatCount="indefinite"/>
+      </path>
+    </svg>
+  </div>
+</div>
+
+<div class="gt_widget-186346 hide" data-name="Upsell Quantity Discounts">
+<div class="gt_container">
+  
+  <div class="gt_product_widgets">
+    <p class="gt_product_widgets_title">
+      Buy More Save More!
+    </p>
+    <div class="gt_discount_container"></div>
+    <p class="gt_noti-error hide"></p>
+  </div>
+  
+</div>
+</div>
+

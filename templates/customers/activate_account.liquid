@@ -1,30 +1,67 @@
-<div class="page-width text-center">
-  <div class="grid">
-    <div class="grid__item medium-up--one-half medium-up--push-one-quarter">
-      <div class="section-header">
-        <h1>{{ 'customer.activate_account.title' | t }}</h1>
-        <p>{{ 'customer.activate_account.subtext' | t }}</p>
+<div class="gt_container">
+  <div class="form_activate_account">
+    <h1 class="title_active">{{ 'customer.activate_account.title' | t }}</h1>
+    <p class="activate_account_mesage">{{ 'customer.activate_account.subtext' | t }}</p>
+    {% form 'activate_customer_password' %}
+      {{ form.errors | default_errors }}
+       <div class="gt_form_group_activate_account">
+        <label for="CustomerPassword" class="label-hidden label_form_group_activate_account">
+          {{ 'customer.activate_account.password' | t }}
+        </label>
+        <input type="password"
+          name="customer[password]"
+          id="CustomerPassword"
+          placeholder="{{ 'customer.activate_account.password' | t }}">
+      	</div>
+      <div class="gt_form_group_activate_account">
+        <label for="CustomerPasswordConfirmation" class="label-hidden label_form_group_activate_account">
+          {{ 'customer.activate_account.password_confirm' | t }}
+        </label>
+        <input type="password"
+          name="customer[password_confirmation]"
+          id="CustomerPasswordConfirmation"
+          placeholder="{{ 'customer.activate_account.password_confirm' | t }}">
       </div>
-
-      <div class="form-vertical">
-        {% form 'activate_customer_password' %}
-
-          {%- if form.errors -%}
-            <div class="form-message form-message--error">
-              {{ form.errors | default_errors }}
-            </div>
-          {%- endif -%}
-
-          <label for="CustomerPassword" class="label--hidden">{{ 'customer.activate_account.password' | t }}</label>
-          <input type="password" value="" name="customer[password]" id="CustomerPassword" placeholder="{{ 'customer.activate_account.password' | t }}">
-
-          <label for="CustomerPasswordConfirmation" class="label--hidden">{{ 'customer.activate_account.password_confirm' | t }}</label>
-          <input type="password" value="" name="customer[password_confirmation]" id="CustomerPasswordConfirmation" placeholder="{{ 'customer.activate_account.password_confirm' | t }}">
-
-          <input type="submit" class="btn" value="{{ 'customer.activate_account.submit' | t }}">
-          <div><input type="submit" name="decline" value="{{ 'customer.activate_account.cancel' | t }}"></div>
-        {% endform %}
-      </div>
+    <div class="activate_account_button_group">
+      <input type="submit" class="button gt_button_submit_activate_account" value="{{ 'customer.activate_account.submit' | t }}">
+      <input type="submit" class="button button--secondary gt_button_submit_activate_account" name="decline" value="{{ 'customer.activate_account.cancel' | t }}">
     </div>
+    {% endform %}
   </div>
 </div>
+<style>
+  .form_activate_account{
+    max-width: 600px;
+    margin: 100px auto;
+  }
+  .activate_account_mesage{
+  	margin-bottom: 20px;  
+  }
+  .gt_form_group_activate_account{
+   margin-bottom: 15px
+ }
+  .activate_account_button_group{
+    display: flex;
+    justify-content: center;
+  }
+  .gt_button_submit_activate_account{
+   	width: 36%;
+    margin: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .label_form_group_activate_account{
+   margin-bottom: 10px;
+   display: block; 
+  }
+   @media (max-width: 576px) {
+     .activate_account_button_group{
+       flex-wrap: wrap;
+     }
+    .gt_button_submit_activate_account {
+        width: 100%;
+      	margin: 5px 0;
+      }
+    }
+</style>

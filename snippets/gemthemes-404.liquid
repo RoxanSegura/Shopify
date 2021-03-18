@@ -1,0 +1,65 @@
+
+  
+<section class="gt_section-4298113 " data-name="404" style="font-family:BrownLL-Regular;">
+  <section class="gt_404-page">
+    <div class="gt_container">
+      <div class="gt_row">
+        <div class="image-404">
+          <img class=" gt_lazyload" src="https://ucarecdn.com/502af010-ed8c-4356-af38-9383ddb38dc3/-/format/auto/-/preview/3000x3000/-/quality/lighter/" alt="bigText">
+        </div>
+        <div class="title-404">
+          <h2>
+            Sorry... Page Not Found
+          </h2>
+          <h3>
+            The page you requested does not exist.
+          </h3>
+        </div>
+        <div class="button-continue-shopping">
+          <a href="/" class="gt_continue_btn">
+            <button type="button" class value>
+              Continue Shopping
+            </button>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</section> 
+
+<section class="gt_section-4298103 " data-name="News Letter">
+   <div class="gt_newsletter">
+      <div class="gt_container">
+         <h2>Newsletter</h2>
+         <p>Subscribe to our newsletter and get reviews of the latest products and services</p>
+          {% form 'customer' %}
+            {% if form.errors %}
+                {% for field in form.errors %}
+                   <div class="gt_newsletter-from">
+                      <p class="result-error">{{ field }} {{ form.errors.messages[field] }}</p>
+                   </div>
+                {% endfor %}
+            {% endif %}
+  
+            {% if form.posted_successfully? %}
+                <div class="gt_newsletter-from">
+                  <p class="result">Thanks for subscribing</p>
+               </div>
+            {% else %}
+               <div class="gt_newsletter-from">
+                  <div class="gt_flex gt_password-input">
+                     <input type="hidden" name="contact[tags]" value="newsletter">
+                     <input type="text" value="{% if customer %}{{ customer.email }}{% endif %}" name="contact[email]" placeholder="Enter your email" class="input-newsletter input-group-field newsletter__input" autocorrect="off" autocapitalize="off">
+                     <button name="commit" type="submit" class="validate button--secondary newsletter__submit" aria-label="Subscribe">Subscribe!
+                     </button>
+                  </div>
+                  <p class="result"></p>
+                  <p class="result-error"></p>
+               </div>
+            {% endif %}
+          {% endform %}
+      </div>
+   </div>
+</section>
+
+  

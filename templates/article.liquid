@@ -1,182 +1,256 @@
-{%- comment -%}
-  Comments may not appear right after they are submitted, either to be checked by Shopify's spam filter
-  or to await moderation. When a comment is submitted, the browser is redirected to a page
-  that includes the new comment id in its URL.
-    Example: http://shopname.myshopify.com/blogs/news/2022072-my-post?comment=3721372
-{%- endcomment -%}
 
-{%- if comment.status == 'pending' -%}
-  {%- assign number_of_comments = article.comments_count | plus: 1 -%}
-{%- else -%}
-  {%- assign number_of_comments = article.comments_count -%}
-{%- endif -%}
-
-<article class="page-width" aria-labelledby="title-0">
-  <div class="grid">
-    <div class="grid__item medium-up--five-sixths medium-up--push-one-twelfth">
-      {% section 'article-template' %}
-    </div>
-  </div>
-</article>
-
-{% if blog.comments_enabled? %}
-  {% if number_of_comments > 0 %}
-    <hr aria-hidden="true">
-    <div class="page-width">
-      <div class="grid">
-        <div class="grid__item medium-up--five-sixths medium-up--push-one-twelfth">
-          <h2 class="h3">{{ 'blogs.comments.comments_with_count' | t: count: number_of_comments }}</h2>
-
-          {% paginate article.comments by 5 %}
-
-            {% comment %}
-              #comments is required, it is used as an anchor link by Shopify.
-            {% endcomment %}
-            <div id="comments">
-              <ul class="comments">
-                {% comment %}
-                  If a comment was just submitted with no blank field, show it.
-                {% endcomment %}
-                {% if comment.status == 'pending' %}
-                  <li id="{{ comment.id }}" class="comment">
-                    {% include 'comment', comment: comment %}
-                  </li>
-                {% endif %}
-
-                {% for comment in article.comments %}
-                  <li id="{{ comment.id }}" class="comment">
-                    {% include 'comment', comment: comment %}
-                  </li>
-                {% endfor %}
-              </ul>
-
-              {%- if paginate.pages > 1 -%}
-                {% include 'pagination', paginate: paginate %}
+  
+<section class="gt_section-4298102 " data-name="Article">
+  <div class="gt_container gt_contentPageBlog" style="font-family:BrownLL-Regular">
+      <div class="contentPageBlog_container">
+          <div class="gt_container content">
+              <div class="list_item_column">
+                  <div class="item">
+                      <div class="title_date">
+                          <div class="title">
+                              <p>
+                                  {{ article.title }} 
+                              </p>
+                          </div>
+                          <div class="data_item">
+                              <div class="content_data_item">
+                                  <span>{{ article.published_at | date: "%b %d, %y" }}</span>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="image_item">
+                          <img class=" gt_lazyload" src="{{ article.image.src | img_url: '100x' }}" alt="{{ article.title }}">
+                      </div>
+                      <div class="description_item">
+                          <p>
+                              {{ article.content }}
+                          </p>
+                      </div>
+                      {% if article.tags.size > 0 %}
+                      <ul>
+                          {% for tag in article.tags %}
+                          <li>
+                              <a href="{{ blog.url }}/tagged/{{ tag | handle }}">{{ tag }}</a>{% unless forloop.last %},{% endunless %}
+                          </li>
+                          {% endfor %}
+                      </ul>
+                      {% endif %}
+                  </div>
+              </div>
+              {%- assign new_comment = false -%}
+              {%- if comment and comment.created_at -%}
+                {%- assign new_comment = true -%}
+                {%- assign new_comment_id = comment.id -%}
               {%- endif -%}
+              
+              {%- if new_comment -%}
+                {%- assign duplicate_comment = false -%}
+                {%- for comment in article.comments -%}
+                  {%- if comment.id == new_comment_id -%}
+                    {%- assign duplicate_comment = true -%}
+                    {% break %}
+                  {%- endif -%}
+                {%- endfor -%}
+              
+                {%- if duplicate_comment -%}
+                  {%- assign number_of_comments = article.comments_count -%}
+                {%- else -%}
+                  {%- assign number_of_comments = article.comments_count | plus: 1 -%}
+                {%- endif -%}
+                {%- else -%}
+                  {%- assign number_of_comments = article.comments_count -%}
+              {%- endif -%}
+              
+              <!-- Code to output article content can be added here. -->
+              
+              {%- if blog.comments_enabled? -%}
+                {%- if number_of_comments > 0 -%}
+                  <hr aria-hidden="true">
+                  <h4>{{ article.comments_count }} comment</h4>
+                  <ul>
+              
+                    <!-- If a comment was just submitted with no blank field, show it. -->
+                    {%- if new_comment -%}
+                      <li class="gt_comment_item">
+                        <div class="gt_comment_content">
+                          {{ comment.content }}
+                        </div>
+                        <span class="gt_comment_author">- {{ comment.author }} posted </span>
+                        <span class="gt_comment_time">  {{ comment.created_at | date: "%b %d, %Y" }}</span>
+                      </li>
+                    {%- endif -%}
+              
+                    {% for comment in article.comments %}
+                      {% unless comment.id == new_comment_id %}
+                        <li class="gt_comment_item">
+                          <div class="gt_comment_content">
+                            {{ comment.content }}
+                          </div>
+                          <span class="gt_comment_author">- {{ comment.author }} posted</span>
+                          <span class="gt_comment_time"> {{ comment.created_at | date: "%b %d, %Y" }}</span>
+                        </li>
+                      {% endunless %}
+                    {% endfor %}
+              
+                  </ul>
+                {%- endif -%}
+              {%- endif -%}
+            
+            <div class="comment">
+              
+              {% if article.comments_enabled? %}
+              
+                <h4 class="h4_comment">
+                  Leave a Comment
+                </h4>
+                
+                <div class="form_comment">
+                  <!-- START COMMENT FORM -->
+                  {% form article %}
+                      {% if form.posted_successfully? %}
+                          {% if article.moderated? %}
+                              <p class="gt_comment_noti">Your comment has been added and will be published as soon as possible.</p>
+                          {% else %}
+                              <p class="gt_comment_noti">Your comment has been added.</p>
+                          {% endif %}
+                      {% endif %}
+              
+                      {% if form.errors %}
+                          <p>Error, please enter all fields.</p>
+                      {% endif %}
+                      <div class="gf_flex gf_flex-md-column gf_flex-wrap group_comment">
+                        <div class="gt_comment_input">
+                          <label for="comment_author" {% if form.errors contains "author" %} class="error" {% endif %}>Name</label>
+                          <input type="text" id="comment_author" name="comment[author]" value="{{ form.author }}" class="field{% if form.errors contains "author" %} error{% endif %}">
+                        </div>
+                        
+                        <div class="gt_comment_input">
+                          <label for="comment_email" {% if form.errors contains "email" %} class="error" {% endif %}>
+                            Email
+                          </label>
+                          <input type="text" id="comment_email" name="comment[email]" value="{{ form.email }}" class="field{% if form.errors contains "email" %} error{% endif %}">
+                        </div>
+                      </div>    
 
-            </div>
-          {% endpaginate %}
-        </div>
+                      <label for="comment_body" {% if form.errors contains "body" %} class="error" {% endif %}>
+                        Comment
+                      </label>
+                      <div class="line_comment">
+                      <textarea id="comment_body" name="comment[body]" {% if form.errors contains "body" %} class="error" {% endif %}>{{ form.body }}</textarea><br>
+                      </div>
+                      <div class="button_post">
+                        <button type="submit" class="button comment submit">POST COMMENT</button>
+                      </div>
+                  {% endform %}
+                  <!-- END COMMENT FORM -->
+                </div>
+              
+              {% endif %}
+              
+            </div> 
+          </div>
       </div>
-    </div>
-  {% endif %}
-
-  <hr aria-hidden="true">
-  <div class="page-width">
-    <div class="grid">
-      <div class="grid__item medium-up--five-sixths medium-up--push-one-twelfth">
-        <div class="comment-form form-vertical">
-          {% form 'new_comment', article %}
-
-            {%- assign formId = 'CommentForm' -%}
-
-            <h2 class="h3">{{ 'blogs.comments.title' | t }}</h2>
-
-            {%- assign post_message = 'blogs.comments.success' -%}
-            {%- if blog.moderated? and comment.status == 'pending' -%}
-              {%- assign post_message = 'blogs.comments.success_moderated' -%}
-            {%- elsif comment.status == 'unapproved' or comment.status == 'spam' -%}
-              {%- assign post_message = 'blogs.comments.unapproved' -%}
-            {%- endif -%}
-
-            {% include 'form-status', form: form, form_id: formId, success_message: post_message %}
-
-            <div class="grid">
-
-              <div class="grid__item medium-up--one-half">
-                <label for="{{ formId }}-author">{{ 'blogs.comments.name' | t }}</label>
-                <input type="text" name="comment[author]" id="{{ formId }}-author" class="input-full{% if form.errors contains 'author' %} input--error{% endif %}" value="{{ form.author }}"{% if form.errors contains 'author' %} aria-invalid="true" aria-describedby="{{ formId}}-author-error"{% endif %}>
-                {% if form.errors contains 'author' %}
-                  <span id="{{ formId}}-author-error" class="input-error-message">
-                    <span class="visually-hidden">{{ 'general.accessibility.error' | t }} </span>
-                    {% include 'icon-error' %}
-                    <span>{{ 'blogs.comments.name' | t }} {{ form.errors.messages['author'] }}.</span>
-                  </span>
-                {% endif %}
-              </div>
-
-              <div class="grid__item medium-up--one-half">
-                <label for="{{ formId }}-email">{{ 'blogs.comments.email' | t }}</label>
-                <input type="email" name="comment[email]" id="{{ formId }}-email" class="input-full{% if form.errors contains 'email' %} input--error{% endif %}" value="{{ form.email }}" autocorrect="off" autocapitalize="off" {% if form.errors contains 'email' %} aria-invalid="true" aria-describedby="{{ formId}}-email-error"{% endif %}>
-                {% if form.errors contains 'email' %}
-                  <span id="{{ formId}}-email-error" class="input-error-message">
-                    <span class="visually-hidden">{{ 'general.accessibility.error' | t }} </span>
-                    {% include 'icon-error' %}
-                    <span>{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}.</span>
-                  </span>
-                {% endif %}
-              </div>
-
-              <div class="grid__item">
-                <label for="{{ formId }}-body">{{ 'blogs.comments.message' | t }}</label>
-                <textarea name="comment[body]" id="{{ formId }}-body" class="input-full{% if form.errors contains 'body' %} input--error{% endif %}"{% if form.errors contains 'body' %} aria-invalid="true" aria-describedby="{{ formId}}-body-error"{% endif %}>{{ form.body }}</textarea>
-                {% if form.errors contains 'body' %}
-                  <span id="{{ formId}}-body-error" class="input-error-message">
-                    <span class="visually-hidden">{{ 'general.accessibility.error' | t }} </span>
-                    {% include 'icon-error' %}
-                    <span>{{ 'blogs.comments.message' | t }} {{ form.errors.messages['body'] }}.</span>
-                  </span>
-                {% endif %}
-              </div>
-
-            </div>
-
-            {% if blog.moderated? %}
-              <p class="fine-print">{{ 'blogs.comments.moderated' | t }}</p>
-            {% endif %}
-
-            <input type="submit" class="btn" value="{{ 'blogs.comments.post' | t }}">
-          {% endform %}
-        </div>
-      </div>
-    </div>
-  </div>
-{% endif %}
-
-<div class="text-center return-link-wrapper page-width">
-  <a href="{{ blog.url }}" class="btn btn--secondary btn--has-icon-before">
-    {% include 'icon-arrow-left' %}
-    {{ 'blogs.article.back_to_blog' | t: title: blog.title }}
-  </a>
-</div>
-
-<script type="application/ld+json">
+      <script type="application/ld+json">{%- assign schemaArticle = article -%}
 {
   "@context": "http://schema.org",
   "@type": "Article",
-  "articleBody": {{ article.content | strip_html | json }},
+  "articleBody": "{% if schemaArticle.content %}{{ schemaArticle.content | strip_html | escape }}{% endif %}",
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": {{ shop.url | append: page.url | json }}
+    "@id": "{{ shop.url }}{{ page.url }}"
   },
-  "headline": {{ article.title | json }},
-  {% if article.excerpt != blank %}
-    "description": {{ article.excerpt | strip_html | json }},
+  "headline": "{{ schemaArticle.title | escape}}",
+  {% if schemaArticle.excerpt != blank %}
+    "description": "{% if schemaArticle.excerpt %}{{ schemaArticle.excerpt | strip_html | escape }}{% endif %}",
   {% endif %}
-  {% if article.image %}
-    {% assign image_size = article.image.width | append: 'x' %}
+  {% if schemaArticle.image %}
+    {% assign image_size = schemaArticle.image.width | append: 'x' %}
     "image": [
-      {{ article | img_url: image_size | prepend: "https:" | json }}
+      "https:{{ schemaArticle | img_url: image_size }}"
     ],
   {% endif %}
-  "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
-  "dateCreated": {{ article.created_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+  "datePublished": "{{ schemaArticle.published_at | date: '%Y-%m-%dT%H:%M:%SZ' }}",
+  "dateCreated": "{{ schemaArticle.created_at | date: '%Y-%m-%dT%H:%M:%SZ' }}",
   "author": {
     "@type": "Person",
-    "name": {{ article.author | json }}
+    "name": "{{ schemaArticle.author | escape }}"
   },
   "publisher": {
     "@type": "Organization",
-    {% if page_image %}
-      {% assign image_size = page_image.width | append: 'x' %}
+    {% if settings.share_image %}
+      {% assign image_size = settings.share_image.width | append: 'x' %}
       "logo": {
         "@type": "ImageObject",
-        "height": {{ page_image.height | json }},
-        "url": {{ page_image | img_url: image_size | prepend: "https:" | json }},
-        "width": {{ page_image.width | json }}
+        "height": "{{ settings.share_image.height }}",
+        "url": "https:{{ settings.share_image | img_url: image_size }}",
+        "width": "{{ settings.share_image.width }}"
+      },
+    {% elsif schemaArticle.image %}
+      {% assign image_size = schemaArticle.image.width | append: 'x' %}
+      "logo": {
+        "@type": "ImageObject",
+        "height": "{{ schemaArticle.image.height }}",
+        "url": "https:{{ schemaArticle.image | img_url: image_size }}",
+        "width": "{{ schemaArticle.image.width }}"
       },
     {% endif %}
-    "name": {{ shop.name | json }}
+    "name": "{{ shop.name | escape }}"
   }
 }
 </script>
+  </div>
+</section>
+
+
+<section class="gt_section-4298110 " data-name="Newsletter">
+  <div class="gt_newletter">
+    <div class="gt_container">
+      <div class="gt_flex gt_align-i-center gt_justify-c-center gt_flex-wrap gt_newletter-body">
+        <div class="gt_newletter_content">
+          <h5 class="gt_newletter_headding">
+              Exclusive 10% Discount
+          </h5>
+          <p class="gt_newletter_message">
+            Join our Email List and get 10% OFF on your first order.
+          </p>
+        </div>
+        <div class="gt_newletter-form">
+          
+            {% form 'customer' %} 
+          
+         
+          {% if form.errors %}
+              {% for field in form.errors %}
+                  <div class="gt_newletter_input">
+                    <p class="result-error">{{ field }} {{ form.errors.messages[field] }}</p>
+                  </div>
+              {% endfor %}
+          {% endif %}
+            
+          {% if form.posted_successfully? %}
+              <div class="gt_newletter_input">
+                <p class="result">Thanks for subscribing</p>
+              </div>
+          {% else %}
+          <div class="gt_newletter_input">
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <input class="gt_input" type="email" value="{% if customer %}{{ customer.email }}{% endif %}" name="contact[email]" autocorrect="off" autocapitalize="off" placeholder="Your email here...">
+            <button class="gt_newletter_btn" id="Subscribe" type="submit" aria-label="Subscribe">
+            Submit!
+          </button>
+          </div>
+          <p class="result"></p>
+          <p class="result-error"></p>
+          {% endif %}
+          
+            {% endform %}
+          
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+  

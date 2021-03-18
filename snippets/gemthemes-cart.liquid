@@ -1,0 +1,660 @@
+
+  
+<section class="gt_section-4298081 " data-name="Cart">
+  <div class="gt_title_body">
+    {% assign classCartContent = '' %}
+    {% if cart.item_count > 0 %}
+        {% assign classCartContent = 'gt_active' %}
+    {% endif %}
+
+    {% assign classCartEmpty = '' %}
+    {% if cart.item_count <= 0 %}
+        {% assign classCartEmpty = 'gt_active' %}
+    {% endif %}
+    
+    <div class="gt_container">
+      <div class="position_hook">
+        
+                  
+<div class="gt_widget-186347" data-name="Scarcity Cart Page">
+  <div class="content-widget">
+    <div class="message-before">These products are limited, checkout within</div>
+    <div class="time-count-down">
+      <div class="container-time">
+        <span class="minute">0</span>
+        <span>:</span>
+        <span class="seconds">00</span>
+      </div>
+    </div>
+    <div class="message-after">so we don't run out of stock!</div>
+  </div>
+  <div class="message-notification">
+    You're out of time! Checkout now to avoid losing your order!
+  </div>
+</div>
+
+<div data-name="Above Cart Section"></div>
+                  
+      </div>
+
+      <div class="cart_content {{ classCartContent }}">
+        <form action="/cart" method="post" novalidate>
+          <div class="gt_flex gt_title_content">
+            <div class="gt_section_name">
+              <h3>
+                Your cart
+              </h3>
+
+              <div class="position_hook">
+                
+              </div>
+            </div>
+            <div class="gt_checkout_content">
+              <div class="gt_flex gt_total">
+                <span class="text_total">
+                  Subtotal:
+                </span>
+                <span class="number_total">
+                  {{ cart.total_price | money }}
+                </span>
+              </div>
+              <div class="button_checkout">
+                <button type="submit" name="checkout" class="gt_flex">
+                  <span class="icon_checkout">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 0C5.34545 0 0 5.34545 0 12C0 18.6545 5.34545 24 12 24C18.6545 24 24 18.6545 24 12C24 5.34545 18.6545 0 12 0ZM18.9273 8.23636L10.2 17.2909C10.0909 17.4 9.98182 17.4545 9.81818 17.4545C9.65455 17.4545 9.49091 17.4 9.43636 17.2909L5.18182 12.7091L5.07273 12.6C4.96364 12.4909 4.90909 12.3273 4.90909 12.2182C4.90909 12.1091 4.96364 11.9455 5.07273 11.8364L5.83636 11.0727C6.05455 10.8545 6.38182 10.8545 6.6 11.0727L6.65455 11.1273L9.65455 14.3455C9.76364 14.4545 9.92727 14.4545 10.0364 14.3455L17.3455 6.76364H17.4C17.6182 6.54545 17.9455 6.54545 18.1636 6.76364L18.9273 7.52727C19.1455 7.69091 19.1455 8.01818 18.9273 8.23636Z" fill="currentColor"/>
+                    </svg>                  
+                  </span>
+                  <span class="text_bt_checkout">
+                    PROCEED TO CHECKOUT
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="gt_cart_body">
+            <div class="gt_cart_content">
+              <div class="gt_flex title_name">
+                <div class="gt_title_product">
+                  <span>
+                    Product
+                  </span>
+                </div>
+                <div class="gt_title_name"></div>
+                <div class="gt_title_quantity">
+                  <span>
+                    Quantity
+                  </span>
+                </div>
+                <div class="gt_title_price">
+                  <span>
+                    Price
+                  </span>
+                </div>
+                <div class="gt_title_total">
+                  <span>
+                    Total
+                  </span>
+                </div>
+              </div>
+              <div class="product_list_content">
+                {% for item in cart.items %}
+                  <div class="wrapper_item">
+                    <div class="gt_flex items_content" data-key="{{ item.key }}" data-variant-id="{{ item.variant.id }}">
+                      <script type="application/json" class="ProductJson">
+                        {{ item.variant | json }}
+                      </script>
+  
+                      <div class="image_product_content">
+                        <div class="image_product">
+                          <img src="{{ item.image | img_url: 'master' }}" alt="{{ item.title | escape }}">
+                        </div>
+                      </div>
+  
+                      <div class="name_content">
+                        <div class="name_product">
+                          <a href="{{ item.url }}">
+                            {{ item.product.title }}
+                          </a>
+                        </div>
+
+                        <div class="varriant_choose">
+                          {% unless item.variant.title contains 'Default' %}
+                            <span class="variant-title">{{ item.variant.title }}</span>
+                          {% endunless %}
+                        </div>
+
+                        <div class="property">
+                          {% assign property_size = item.properties | size %}
+                          {% if property_size > 0 %}
+                            {% for p in item.properties %}
+                              <div class="item_property">
+                                {% assign first_character_in_key = p.first | truncate: 1, '' %}
+                                {% unless p.last == blank or first_character_in_key == '_' %}
+                                  <span class="title_property">
+                                    {{ p.first }}: 
+                                  </span>
+                                    {% if p.last contains '/uploads/' %}
+                                    <span class="detail_property"><a class="lightbox" href="{{ p.last }}">{{ p.last | split: '/' | last }}</a></span>
+                                  {% else %}
+                                    <span class="detail_property">{{ p.last }}</span>
+                                  {% endif %}
+                                {% endunless %}
+                              </div>
+                            {% endfor %}
+                          {% endif %}
+                        </div>
+
+                        <div class="position_hook">
+                          
+                        </div>
+
+                        <div class="quantity_product_mobile">
+                          <div class="gt_flex box_quantity">
+                            <div class="gt_flex gt_quantity_minus">
+                              <svg width="12" height="2" viewBox="0 0 12 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M4.72946e-09 1C7.34146e-09 0.447715 0.447715 2.11745e-09 1 4.72946e-09L11 5.2024e-08C11.5523 5.4636e-08 12 0.447715 12 1C12 1.55228 11.5523 2 11 2L1 2C0.447715 2 2.11745e-09 1.55228 4.72946e-09 1Z" fill="currentColor"/>
+                              </svg>                          
+                            </div>
+                            <input class="number_quantity" type="number" min="1" value="{{ item.quantity }}">
+                            <div class="gt_flex gt_quantity_plus">
+                              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M6 0C6.55228 0 7 0.447715 7 1V11C7 11.5523 6.55228 12 6 12C5.44772 12 5 11.5523 5 11V1C5 0.447715 5.44772 0 6 0Z" fill="currentColor"/>
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M4.72946e-09 6C7.34146e-09 5.44772 0.447715 5 1 5L11 5C11.5523 5 12 5.44772 12 6C12 6.55228 11.5523 7 11 7L1 7C0.447715 7 2.11745e-09 6.55228 4.72946e-09 6Z" fill="currentColor"/>
+                              </svg>  
+                            </div>
+                          </div>
+                          <div class="button_remove">
+                            <span>
+                              Remove
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="quantity_product">
+                        <div class="gt_flex box_quantity">
+                          <div class="gt_flex gt_quantity_minus">
+                            <svg width="12" height="2" viewBox="0 0 12 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path fill-rule="evenodd" clip-rule="evenodd" d="M4.72946e-09 1C7.34146e-09 0.447715 0.447715 2.11745e-09 1 4.72946e-09L11 5.2024e-08C11.5523 5.4636e-08 12 0.447715 12 1C12 1.55228 11.5523 2 11 2L1 2C0.447715 2 2.11745e-09 1.55228 4.72946e-09 1Z" fill="currentColor"/>
+                            </svg>                          
+                          </div>
+                          <input class="number_quantity" type="number" min="1" value="{{ item.quantity }}">
+                          <div class="gt_flex gt_quantity_plus">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path fill-rule="evenodd" clip-rule="evenodd" d="M6 0C6.55228 0 7 0.447715 7 1V11C7 11.5523 6.55228 12 6 12C5.44772 12 5 11.5523 5 11V1C5 0.447715 5.44772 0 6 0Z" fill="currentColor"/>
+                              <path fill-rule="evenodd" clip-rule="evenodd" d="M4.72946e-09 6C7.34146e-09 5.44772 0.447715 5 1 5L11 5C11.5523 5 12 5.44772 12 6C12 6.55228 11.5523 7 11 7L1 7C0.447715 7 2.11745e-09 6.55228 4.72946e-09 6Z" fill="currentColor"/>
+                            </svg>  
+                          </div>
+                        </div>
+                        <div class="button_remove">
+                          <span>
+                            Remove
+                          </span>
+                        </div>
+                      </div>
+  
+                      <div class="price_product">
+                        <span class="current_price">{{ item.variant.price | money }}</span>
+                        {% if item.variant.compare_at_price > item.variant.price %}
+                          <span class="compare_price">{{ item.variant.compare_at_price | money }}</span>
+                        {% endif %}
+                      </div>
+  
+                      <div class="total_price_product">
+                        {{ item.original_line_price | money }}
+                      </div>
+                    </div>
+
+                   
+                  </div>
+                {% endfor %}
+              </div>
+
+              <!--confirm remove item cart-->
+              <div class="bg-overlay show_popup--delete">
+                <div class="modal-lg popup-style">
+                  <div class="modal-body gf-pop-up gt-model-confirm">
+                    <div class="modal-content">
+                      <div class="question-confirm">
+                        Are you sure?
+                      </div>
+                      <div class="gt_flex gt_justify-c-center">
+                        <button class="bt-cancel cancel-remove-item-cart" type="button">
+                          No
+                        </button>
+                        <button class="bt-confirm confirm-remove-item-cart" type="button">
+                          Yes
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-overlay show-popup-quantity">
+                <div class="modal-lg popup-style show_popup--delete-{{ item.id }}">
+                  <div class="modal-body gf-pop-up gt-model-quantity">
+                    <div class="modal-content">
+                      <div class="question-confirm">
+                        Do you want to remove this product from the shopping cart?
+                      </div>
+                      <div class="gt_flex gt_justify-c-center">
+                        <button class="bt-cancel cancel-remove-quantity-item-cart cancel-remove" type="button">
+                          No
+                        </button>
+                        <button class="bt-confirm confirm-remove-quantity-item-cart confirm-remove" type="button">
+                          Yes
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="gt_flex infomation_checkout_content">
+            <!--standard--->
+            
+                        
+            
+              <div class="order_note_content">
+                <div class="box_order_note">
+                  <div class="title_order_note">
+                    Order Note
+                  </div>
+                  <div class="form_order_note">
+                    <textarea name="note" placeholder="Leave some note to your order"> {{ cart.note }}
+                    </textarea>
+                  </div>
+                </div>
+              </div>
+            
+
+            <div class="position_hook">
+              
+            </div>
+
+            <div class="gt_flex check_out_content">
+              
+              
+                
+              
+              
+              
+                
+              
+              <div class="gt_flex gt_discount ">
+                <span class="gt_discount-text">
+                  Discount:
+                </span>
+
+                <span class="gt_discount-price">
+                  
+                    <span class="gt_discount-icon">
+                      <svg viewBox="0 0 512 512">
+                        <path fill="currentColor" d="M0 252.118V48C0 21.49 21.49 0 48 0h204.118a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882 0L14.059 286.059A48 48 0 0 1 0 252.118zM112 64c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z" class=""/>
+                      </svg>
+                      <span class="gt_discount-code">ESW-26UbcYMWyO1</span>
+                    </span>
+                  
+                  <span class="gt_discount-price-number">
+                    -{{ cart.total_price | money }}
+                  </span>
+                </span>
+              </div>
+
+              <div class="gt_flex gt_total">
+                <span class="text_total">
+                  Subtotal:
+                </span>
+                <span class="number_total">
+                  {{ cart.total_price | money }}
+                </span>
+              </div>
+
+              {% assign totalComparePrice = 0 %}
+              {% for item in cart.items %}
+                {% if item.variant.compare_at_price > item.variant.price and item.variant.compare_at_price > 0 %}
+                  {% assign saveCompareItem = item.variant.compare_at_price | minus:item.variant.price %}
+                  {% assign totalComparePriceItem = saveCompareItem | times:item.quantity %}
+                  {% assign totalComparePrice = totalComparePrice | plus: totalComparePriceItem %}
+                {% endif %}
+              {% endfor %}
+              
+              {% assign saveMoney = totalComparePrice | plus:cart.total_discount %}
+              {% if saveMoney > 0 %}
+                <div class="gt_flex save_money">
+                  <span class="text_save_money">
+                    You Save:
+                  </span>
+                  <div class="box_money">
+                    <span class="number_save_money">
+                      {{ saveMoney | money }}
+                    </span>
+                    <span class="percent_save_money">
+                      {%- assign totalPriceFloat = saveMoney | plus:cart.total_price -%}
+                      {%- assign totalPriceFloat = totalPriceFloat | times: 1.0 -%}
+                      {%- assign diff = saveMoney | divided_by: totalPriceFloat -%}
+                      {%- assign diff = diff | times: 100.0 -%}
+                      {%- assign diff = diff | round -%}
+                      (<span class="percent_save_money-number">{{diff}}%</span>)
+                    </span>
+                  </div>
+                </div>
+              {% endif %}
+
+              <div class="text_checkout">
+                Shipping & taxes calculated at checkout
+              </div>
+              <div class="gt_flex note_checkout">
+                <span>
+                  Standard Delivery ETA <br>Thursday - Friday, 21/11 - 22/11
+                </span>
+              </div>
+              
+              <!--conditions-->
+              
+
+              
+              
+              <div class="button_checkout">
+                <button class="gt_flex" type="submit" name="checkout">
+                  <span class="icon_checkout">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 0C5.34545 0 0 5.34545 0 12C0 18.6545 5.34545 24 12 24C18.6545 24 24 18.6545 24 12C24 5.34545 18.6545 0 12 0ZM18.9273 8.23636L10.2 17.2909C10.0909 17.4 9.98182 17.4545 9.81818 17.4545C9.65455 17.4545 9.49091 17.4 9.43636 17.2909L5.18182 12.7091L5.07273 12.6C4.96364 12.4909 4.90909 12.3273 4.90909 12.2182C4.90909 12.1091 4.96364 11.9455 5.07273 11.8364L5.83636 11.0727C6.05455 10.8545 6.38182 10.8545 6.6 11.0727L6.65455 11.1273L9.65455 14.3455C9.76364 14.4545 9.92727 14.4545 10.0364 14.3455L17.3455 6.76364H17.4C17.6182 6.54545 17.9455 6.54545 18.1636 6.76364L18.9273 7.52727C19.1455 7.69091 19.1455 8.01818 18.9273 8.23636Z" fill="currentColor"/>
+                    </svg>                  
+                  </span>
+                  <span class="text_bt_checkout">
+                    PROCEED TO CHECKOUT
+                  </span>
+                </button>
+              </div>
+ 
+              <div class="trustbadge_img">
+                <img class="gt_lazyload" src="https://d3dfaj4bukarbm.cloudfront.net/staging/images/admin/edb3da26-8ce9-4b3e-82d4-64c74d26f2ea.png" alt="Trust%20Badge">
+              </div>
+            </div>
+          </div>
+          
+          
+            <div class="box_checkout_mobile">
+              <div class="gt_flex box_checkout_content">
+                <div class="info_checkout">
+                  <div class="gt_flex total_money">
+                    <span class="text_total">
+                      Subtotal:
+                    </span>
+                    <span class="number_total">{{ cart.total_price | money }}</span>
+                  </div>
+
+                  {% assign totalComparePrice = 0 %}
+                  {% for item in cart.items %}
+                    {% if item.variant.compare_at_price > item.variant.price and item.variant.compare_at_price > 0 %}
+                      {% assign saveCompareItem = item.variant.compare_at_price | minus:item.variant.price %}
+                      {% assign totalComparePriceItem = saveCompareItem | times:item.quantity %}
+                      {% assign totalComparePrice = totalComparePrice | plus: totalComparePriceItem %}
+                    {% endif %}
+                  {% endfor %}
+                  
+                  {% assign saveMoney = totalComparePrice | plus:cart.total_discount %}
+                  {% if saveMoney > 0 %}
+                    <div class="gt_flex save_money">
+                      <span class="text_save_money">
+                        You Save:
+                      </span>
+                      <div class="number_save_money">
+                        <span class="number_save_money">{{ saveMoney | money }}</span>
+                        <span class="percent_money">
+                          {%- assign totalPriceFloat = saveMoney | plus:cart.total_price -%}
+                          {%- assign totalPriceFloat = totalPriceFloat | times: 1.0 -%}
+                          {%- assign diff = saveMoney | divided_by: totalPriceFloat -%}
+                          {%- assign diff = diff | times: 100.0 -%}
+                          {%- assign diff = diff | round -%}
+                          (<span class="percent_save_money-number">{{diff}}%</span>)
+                        </span>
+                      </div>
+                    </div>
+                  {% endif %}
+                </div>
+
+                <div class="button_checkout">
+                  <button class="gt_flex" type="submit" name="checkout">
+                    <span class="icon_checkout">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 0C5.34545 0 0 5.34545 0 12C0 18.6545 5.34545 24 12 24C18.6545 24 24 18.6545 24 12C24 5.34545 18.6545 0 12 0ZM18.9273 8.23636L10.2 17.2909C10.0909 17.4 9.98182 17.4545 9.81818 17.4545C9.65455 17.4545 9.49091 17.4 9.43636 17.2909L5.18182 12.7091L5.07273 12.6C4.96364 12.4909 4.90909 12.3273 4.90909 12.2182C4.90909 12.1091 4.96364 11.9455 5.07273 11.8364L5.83636 11.0727C6.05455 10.8545 6.38182 10.8545 6.6 11.0727L6.65455 11.1273L9.65455 14.3455C9.76364 14.4545 9.92727 14.4545 10.0364 14.3455L17.3455 6.76364H17.4C17.6182 6.54545 17.9455 6.54545 18.1636 6.76364L18.9273 7.52727C19.1455 7.69091 19.1455 8.01818 18.9273 8.23636Z" fill="currentColor"/>
+                      </svg> 
+                    </span>
+                    <span class="text_button">
+                      PROCEED TO CHECKOUT
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          
+        </form>
+      </div>
+
+      <div class="cart_empty {{ classCartEmpty }}">
+        <div class="gt_flex gt_title_content">
+          <div class="gt_section_name">
+            <h3>
+              Your cart
+            </h3>
+          </div>
+        </div>
+
+        <div class=" cart_empty_content">
+          <div class="text_cart_empty">
+            Your cart is empty!
+          </div>
+
+          <div class="button_continue_shopping">
+            <a href="/collections/es-demo-juice">
+              <button class="gt_flex" type="button">
+                <span class="icon_button">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8.03992 24C6.23992 24 4.91992 22.56 4.91992 20.88C4.91992 19.08 6.35992 17.76 8.03992 17.76C9.83992 17.76 11.1599 19.2 11.1599 20.88C11.2799 22.56 9.83992 24 8.03992 24ZM8.03992 20.04C7.55992 20.04 7.31992 20.4 7.31992 20.76C7.31992 21.24 7.67992 21.48 8.03992 21.48C8.51992 21.48 8.75992 21.12 8.75992 20.76C8.87992 20.4 8.51992 20.04 8.03992 20.04Z" fill="currentColor"/>
+                    <path d="M19.7997 24C17.9997 24 16.6797 22.56 16.6797 20.88C16.6797 19.08 18.1197 17.76 19.7997 17.76C21.5997 17.76 22.9197 19.2 22.9197 20.88C23.0397 22.56 21.5997 24 19.7997 24ZM19.7997 20.04C19.3197 20.04 19.0797 20.4 19.0797 20.76C19.0797 21.24 19.4397 21.48 19.7997 21.48C20.2797 21.48 20.5197 21.12 20.5197 20.76C20.6397 20.4 20.2797 20.04 19.7997 20.04Z" fill="currentColor"/>
+                    <path d="M19.2 17.16H8.76C8.04 17.16 7.2 16.92 6.72 16.44C6.12 15.96 5.76 15.24 5.64 14.52L4.2 3.12C4.2 2.88 4.08 2.76 3.96 2.64C3.72 2.52 3.6 2.4 3.36 2.4H1.2C0.48 2.4 0 1.92 0 1.2C0 0.48 0.48 0 1.2 0H3.36C4.08 0 4.92 0.24 5.4 0.84C6 1.32 6.36 2.04 6.48 2.76L6.72 4.92H22.8C23.16 4.92 23.52 5.04 23.76 5.4C24 5.64 24 6 24 6.36L22.32 14.64C22.2 15.36 21.72 16.08 21.24 16.44C20.64 16.92 19.92 17.16 19.2 17.16ZM19.2 14.76C19.32 14.76 19.56 14.76 19.68 14.64C19.8 14.52 19.92 14.4 19.92 14.16L21.24 7.32H7.2L8.04 14.04C8.04 14.28 8.16 14.4 8.28 14.52C8.4 14.64 8.64 14.64 8.76 14.76H19.2Z" fill="currentColor"/>
+                  </svg>    
+                </span>
+                <span class="text_button">
+                  Continue Shopping
+                </span>
+              </button>
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="position_hook">
+        
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="gt_section-4298105 " data-name="You May Also Like">
+  <div class="gt_productlist"> 
+    <div class="position_hook">
+      
+    </div>
+    <div class="gt_container">
+      <div class="gt_productlist-content">
+        <div class="gt_flex gt_flex-column gt_align-i-center gt_productlist-head">
+        <h3>
+        You May Also Like
+        </h3>
+        </div>
+        <div class="position_hook">
+            
+        </div>
+        <div class="gt_flex gt_flex-wrap owl-carousel owl-theme gt_productlist-items">
+        
+        
+        
+        {% for product in collections.all.products limit:4 %}
+        
+            <div class="gt_productlist-item item">
+            <div class="gt_element-29811" data-name="Product List" keyword="product">
+  {%- assign current_variant = product.selected_or_first_available_variant -%}
+    <script type="application/json" class="ProductJson" data-id="{{product.id}}" data-variant="{{product.selected_or_first_available_variant.id}}">
+      {{ product | json }}
+    </script>
+  {% unless current_variant == empty %}
+    <script type="application/json"> 
+      {{ current_variant | json }}
+    </script>
+  {% endunless %}
+    
+      {% form 'product', product, class:'product-form' %}
+    
+    <input type="hidden" name="id" class="gt_swatches--input" value="{{current_variant.id}}">
+    <meta itemprop="name" content="{{ product.title }}">
+    <meta itemprop="url" content="{{ shop.url }}{{ product.url }}">
+    <meta itemprop="image" content="{{ product.featured_image.src | img_url: 'grande' }}">
+
+    <div class="gt_product_content">
+      <a class="gt_product_link" href="{{product.url}}">
+      <div class="gt_image_product">
+        
+        {%- assign current_variantProduct = product.selected_or_first_available_variant -%}
+        {% if current_variantProduct == empty or current_variantProduct.featured_image == null  %}
+          {%- assign imageURL = product.featured_image -%}
+        {% else %}
+          {%- assign imageURL = current_variantProduct.featured_image -%}
+        {% endif %}
+
+
+        <div class="image_content gt_product-images">
+          
+            {%- assign imageURL = product.featured_image -%}
+          
+
+          <img class="gt_lazyload" src="{{ imageURL.src | img_url: '300x' }}" data-id="{{ imageURL.id }}" alt="{{ imageURL.alt }}">
+        </div>
+        
+        
+        {% assign endDate = "" %}
+        
+        
+        
+        {% if product.id == 6594273804443 %}
+          {% assign endDate = "" %}
+        {% endif %}
+        
+
+        {% if endDate != "" %}
+        <div class="gt_countdown" end-date="{{endDate}}" product-id="{{product.id}}">
+          <div class="count_down_content">
+            <span class="time_count_down">
+              <span class="time_count_down-hours">00</span>:<span class="time_count_down-minutes">00</span>:<span class="time_count_down-seconds">00</span>
+            </span>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      </a>
+      <a class="gt_product_link" href="{{product.url}}">
+      <div class="gt_product_name">
+          {{product.title}}
+      </div>
+      </a>
+      <div class="gt_flex gt_variant_product">
+       {% for option in product.options_with_values offset: 1 limit: 2 %}
+        {% if option.name != "Title" %}
+          <div class="gt_flex gt_flex-column gt_variant_content product_variant gt_product-swatches--item {% if option.values.size == 1%} variant_none {% endif %}" data-name="{{option.name}}">
+            <p>{{option.name}}</p>
+            <div class="gt_select-styled gt_product-swatches--name">{{option.selected_value}}</div>
+              <ul class="gt_select-options" style="display: none;">
+               
+              {% for value in option.values %}
+                {% if value == option.selected_value %}
+                    {% assign selectedClass = 'gt_swatches--select gt_active' %}
+                {% else %}
+                    {% assign selectedClass = 'gt_swatches--select' %}
+                {% endif %}
+                <li class="gt_product-swatches--options {{selectedClass}}" data-name="{{option.name}}" data-value="{{value}}" data-show="false">{{value}}</li>
+              {% endfor %}
+                  
+              </ul>
+          </div>
+        {% endif %}
+         {% endfor %}
+          {% for option in product.options_with_values limit: 1 %}
+          {% if option.name != "Title" %}
+             <div class="gt_flex gt_flex-column gt_variant_content product_variant gt_product-swatches--item {% if option.values.size == 1%} variant_none {% endif %}" data-name="{{option.name}}">
+              <p>{{option.name}}</p>
+              <div class="gt_select-styled gt_product-swatches--name">{{option.selected_value}}</div>
+              <ul class="gt_select-options" style="display: none;">
+               
+              {% for value in option.values %}
+                {% if value == option.selected_value %}
+                    {% assign selectedClass = 'gt_swatches--select gt_active' %}
+                {% else %}
+                    {% assign selectedClass = 'gt_swatches--select' %}
+                {% endif %}
+                <li class="gt_product-swatches--options {{selectedClass}}" data-name="{{option.name}}" data-value="{{value}}" data-show="false">{{value}}</li>
+              {% endfor %}
+                  
+              </ul>
+              
+          </div>
+          {% endif %}
+          {% endfor %} 
+      </div>
+      <div class="gt_flex gt_product_price">
+        
+          <span class="gt_curent_price gt_product-price--number" data-currentprice="{{ product.price }}">{{product.price | money }}</span>
+      </div>
+      {% if current_variant.available %}
+        {% assign classButton = '' %}
+      {% else %}
+        {% assign classButton = 'gt_soldout' %}
+      {% endif %}
+      
+        <div class="button_add_to_cart gt_product-addtocart {{classButton}}" data-addtocart="BUY NOW" data-soldout="Sold Out">
+          
+            <button name="add" id="AddToCart" class="gt_product-addtocart--button" type="submit">
+              
+              <span class="gt_product-addtocart--text">
+                {%- if current_variant.available -%}
+                  BUY NOW
+                {%- else -%}
+                  Sold Out
+                {%- endif -%}
+              </span>
+            </button>
+          
+      </div>
+      
+      
+    </div>
+    <div class="position_hook">
+    
+    </div>
+    
+    {% endform %}
+  
+</div>
+
+            </div>
+        {% endfor %}
+    </div>
+    </div>
+    </div>
+    <div class="position_hook">
+      
+    </div>
+  </div>
+</section>
+
+
+  

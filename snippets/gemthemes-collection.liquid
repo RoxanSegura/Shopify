@@ -1,0 +1,290 @@
+
+  
+<section class="gt_section-4298114 " data-name="Collection">
+    <div class="gt_productlist">
+      <div class="position_hook">
+        
+      </div>
+        <div class="gt_container">
+          
+            
+        
+        {% paginate collection.products by 8 %}
+         
+        <div class="gt_productlist-content">
+            <div class="gt_flex gt_flex-column gt_align-i-center gt_productlist-head">
+            <h3>
+              {{collection.title}}
+            </h3>
+            <p>
+              {{collection.description}}
+            </p>
+            </div>
+          	<div class="position_hook">
+              
+            </div>
+            <div class="gt_flex gt_flex-wrap gt_productlist-items">
+            {% for product in collection.products limit:8 %}
+                <div class="gt_productlist-item">
+                    <div class="gt_element-29811" data-name="Product List" keyword="product">
+  {%- assign current_variant = product.selected_or_first_available_variant -%}
+    <script type="application/json" class="ProductJson" data-id="{{product.id}}" data-variant="{{product.selected_or_first_available_variant.id}}">
+      {{ product | json }}
+    </script>
+  {% unless current_variant == empty %}
+    <script type="application/json"> 
+      {{ current_variant | json }}
+    </script>
+  {% endunless %}
+    
+      {% form 'product', product, class:'product-form' %}
+    
+    <input type="hidden" name="id" class="gt_swatches--input" value="{{current_variant.id}}">
+    <meta itemprop="name" content="{{ product.title }}">
+    <meta itemprop="url" content="{{ shop.url }}{{ product.url }}">
+    <meta itemprop="image" content="{{ product.featured_image.src | img_url: 'grande' }}">
+
+    <div class="gt_product_content">
+      <a class="gt_product_link" href="{{product.url}}">
+      <div class="gt_image_product">
+        
+        {%- assign current_variantProduct = product.selected_or_first_available_variant -%}
+        {% if current_variantProduct == empty or current_variantProduct.featured_image == null  %}
+          {%- assign imageURL = product.featured_image -%}
+        {% else %}
+          {%- assign imageURL = current_variantProduct.featured_image -%}
+        {% endif %}
+
+
+        <div class="image_content gt_product-images">
+          
+            {%- assign imageURL = product.featured_image -%}
+          
+
+          <img class="gt_lazyload" src="{{ imageURL.src | img_url: '300x' }}" data-id="{{ imageURL.id }}" alt="{{ imageURL.alt }}">
+        </div>
+        
+        
+        {% assign endDate = "" %}
+        
+        
+        
+        {% if product.id == 6594273804443 %}
+          {% assign endDate = "" %}
+        {% endif %}
+        
+
+        {% if endDate != "" %}
+        <div class="gt_countdown" end-date="{{endDate}}" product-id="{{product.id}}">
+          <div class="count_down_content">
+            <span class="time_count_down">
+              <span class="time_count_down-hours">00</span>:<span class="time_count_down-minutes">00</span>:<span class="time_count_down-seconds">00</span>
+            </span>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      </a>
+      <a class="gt_product_link" href="{{product.url}}">
+      <div class="gt_product_name">
+          {{product.title}}
+      </div>
+      </a>
+      <div class="gt_flex gt_variant_product">
+       {% for option in product.options_with_values offset: 1 limit: 2 %}
+        {% if option.name != "Title" %}
+          <div class="gt_flex gt_flex-column gt_variant_content product_variant gt_product-swatches--item {% if option.values.size == 1%} variant_none {% endif %}" data-name="{{option.name}}">
+            <p>{{option.name}}</p>
+            <div class="gt_select-styled gt_product-swatches--name">{{option.selected_value}}</div>
+              <ul class="gt_select-options" style="display: none;">
+               
+              {% for value in option.values %}
+                {% if value == option.selected_value %}
+                    {% assign selectedClass = 'gt_swatches--select gt_active' %}
+                {% else %}
+                    {% assign selectedClass = 'gt_swatches--select' %}
+                {% endif %}
+                <li class="gt_product-swatches--options {{selectedClass}}" data-name="{{option.name}}" data-value="{{value}}" data-show="false">{{value}}</li>
+              {% endfor %}
+                  
+              </ul>
+          </div>
+        {% endif %}
+         {% endfor %}
+          {% for option in product.options_with_values limit: 1 %}
+          {% if option.name != "Title" %}
+             <div class="gt_flex gt_flex-column gt_variant_content product_variant gt_product-swatches--item {% if option.values.size == 1%} variant_none {% endif %}" data-name="{{option.name}}">
+              <p>{{option.name}}</p>
+              <div class="gt_select-styled gt_product-swatches--name">{{option.selected_value}}</div>
+              <ul class="gt_select-options" style="display: none;">
+               
+              {% for value in option.values %}
+                {% if value == option.selected_value %}
+                    {% assign selectedClass = 'gt_swatches--select gt_active' %}
+                {% else %}
+                    {% assign selectedClass = 'gt_swatches--select' %}
+                {% endif %}
+                <li class="gt_product-swatches--options {{selectedClass}}" data-name="{{option.name}}" data-value="{{value}}" data-show="false">{{value}}</li>
+              {% endfor %}
+                  
+              </ul>
+              
+          </div>
+          {% endif %}
+          {% endfor %} 
+      </div>
+      <div class="gt_flex gt_product_price">
+        
+          <span class="gt_curent_price gt_product-price--number" data-currentprice="{{ product.price }}">{{product.price | money }}</span>
+      </div>
+      {% if current_variant.available %}
+        {% assign classButton = '' %}
+      {% else %}
+        {% assign classButton = 'gt_soldout' %}
+      {% endif %}
+      
+        <div class="button_add_to_cart gt_product-addtocart {{classButton}}" data-addtocart="BUY NOW" data-soldout="Sold Out">
+          
+            <button name="add" id="AddToCart" class="gt_product-addtocart--button" type="submit">
+              
+              <span class="gt_product-addtocart--text">
+                {%- if current_variant.available -%}
+                  BUY NOW
+                {%- else -%}
+                  Sold Out
+                {%- endif -%}
+              </span>
+            </button>
+          
+      </div>
+      
+      
+    </div>
+    <div class="position_hook">
+    
+    </div>
+    
+    {% endform %}
+  
+</div>
+
+                </div>
+             {% endfor %}
+        	</div>
+          	{%- if paginate.pages > 1 -%}
+          	<div class="position_hook">
+              
+            </div>
+            <div class="paging">
+               <ul class="list_page">
+                  {%- if paginate.previous-%}
+                  <li>
+                    <span>
+                      <a href="{{ paginate.previous.url }}"><div class="arrow-right icon"></div></a>
+                    </span>
+                  </li>
+                  {%- else -%}
+                  <li class="disabled">
+                    <span>
+                      <a><div class="arrow-right icon"></div></a>
+                    </span>
+                  </li>
+                  {%- endif -%}
+
+                  {%- for part in paginate.parts -%}
+                  {%- if part.is_link -%}
+                  <li class="item">
+                    <span>
+                      <a href="{{ part.url }}">{{ part.title }}</a>
+                    </span>
+                  </li>
+                  {%- else -%}
+                  {%- if part.title == paginate.current_page -%}
+                  <li class="item current">
+                    <span>{{ part.title }}</span>
+                  </li>
+                  {%- else -%}
+                  <li class="item current">
+                    <span>{{ part.title }}</span>
+                  </li>
+                  {%- endif -%}
+                  {%- endif -%}
+                  {%- endfor -%}
+                  {%- if paginate.next -%}
+                  <li class="item next">
+                    <span>
+                      <a href="{{ paginate.next.url }}"><div class="arrow-right icon"></div></a>
+                    </span>
+                  </li>
+                  {%- else -%}
+                  <li class="item next">
+                    <span>
+                      <a><div class="arrow-right icon"></div></a>
+                    </span>
+                  </li>
+                  {%- endif -%}
+                </ul>
+            </div>
+            {%- endif -%}
+        </div>
+        
+       {% endpaginate %}
+       
+    </div>
+    <div class="position_hook">
+        
+      </div>
+</div></section>
+
+<section class="gt_section-4298107 " data-name="Newsletter">
+  <div class="gt_newletter">
+    <div class="gt_container">
+      <div class="gt_flex gt_align-i-center gt_justify-c-center gt_flex-wrap gt_newletter-body">
+        <div class="gt_newletter_content">
+          <h5 class="gt_newletter_headding">
+              Exclusive 10% Discount
+          </h5>
+          <p class="gt_newletter_message">
+            Join our Email List and get 10% OFF on your first order.
+          </p>
+        </div>
+        <div class="gt_newletter-form">
+          
+            {% form 'customer' %} 
+          
+         
+          {% if form.errors %}
+              {% for field in form.errors %}
+                  <div class="gt_newletter_input">
+                    <p class="result-error">{{ field }} {{ form.errors.messages[field] }}</p>
+                  </div>
+              {% endfor %}
+          {% endif %}
+            
+          {% if form.posted_successfully? %}
+              <div class="gt_newletter_input">
+                <p class="result">Thanks for subscribing</p>
+              </div>
+          {% else %}
+          <div class="gt_newletter_input">
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <input class="gt_input" type="email" value="{% if customer %}{{ customer.email }}{% endif %}" name="contact[email]" autocorrect="off" autocapitalize="off" placeholder="Your email here...">
+            <button class="gt_newletter_btn" id="Subscribe" type="submit" aria-label="Subscribe">
+            Submit!
+          </button>
+          </div>
+          <p class="result"></p>
+          <p class="result-error"></p>
+          {% endif %}
+          
+            {% endform %}
+          
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+  

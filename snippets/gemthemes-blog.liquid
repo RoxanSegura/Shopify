@@ -1,0 +1,91 @@
+
+  
+<section class="gf_section-4298087" data-name="Blog">
+  <div class="blog_page">
+    
+      {% paginate blog.articles by 2 %}
+    
+      <div class="gf_container">
+          <h2 class="h2_blog">
+            BLOG
+          </h2>
+          {% for article in blog.articles limit:2 %}
+          <div class="gf_flex gf_flex-wrap blog_content">
+              <div class="gf_flex blog_items">
+                  <a href="{{ article.url }}" class="image_blog">
+                    <img class=" gt_lazyload" src="{{ article.image.src | img_url: '100x' }}" alt="{{ article.title }}">
+                  </a>
+                  <div class="blog_detail">
+                      <a href="{{ article.url }}">
+                          <div class="title_blog">{{ article.title }}</div>
+                          <div class="detail_blog">
+                              {{ article.excerpt }}
+                          </div>
+                      </a>
+                      <a class="see_more" href="{{ article.url }}">Continue reading ></a>
+                  </div>
+              </div>
+          </div>
+          {% endfor %}
+          
+        {%- if paginate.pages > 1 -%}
+      <div class="paging">
+          <ul class="list_page">
+            {%- if paginate.previous-%}
+              <li class="item previous">
+                  <span>
+                    <a href="{{ paginate.previous.url }}"><div class="arrow-right icon"></div></a>
+                  </span>
+              </li>
+              {%- else -%}
+              <li class="disabled">
+                <span>
+                  <a><div class="arrow-right icon"></div></a>
+                </span>
+              </li>
+              {%- endif -%}
+              
+              {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}
+              <li class="item">
+                  <span>
+                  <a href="{{ part.url }}">{{ part.title }}</a>
+                  </span>
+              </li>
+              {%- else -%}
+              {%- if part.title == paginate.current_page -%}
+              <li class="item current">
+                  <span>{{ part.title }}</span>
+              </li>
+              {%- else -%}
+                <li class="item current">
+                  <span>{{ part.title }}</span>
+                </li>
+              {%- endif -%}
+              {%- endif -%}
+              {%- endfor -%}
+              {%- if paginate.next -%}
+              <li class="item next">
+                  <span>
+                  <a href="{{ paginate.next.url }}"><div class="arrow-right icon"></div></a>
+                  </span>
+              </li>
+              {%- else -%}
+                <li class="item next">
+                  <span>
+                    <a><div class="arrow-right icon"></div></a>
+                  </span>
+                </li>
+              {%- endif -%}
+          </ul>
+      </div>
+      {%- endif -%}
+      
+      
+       {% endpaginate %}
+      
+      </div>
+  </div>
+</section>
+
+  
